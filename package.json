@@ -1,0 +1,19 @@
+{
+  "name": "redux-demo",
+  "version": "1.0.0",
+  "description": "Experimentation with Redux framework",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cschwartz525/redux-demo.git"
+  },
+  "author": "Craig Schwartz <craigschwartz525@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cschwartz525/redux-demo/issues"
+  },
+  "homepage": "https://github.com/cschwartz525/redux-demo#readme"
+}
