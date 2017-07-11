@@ -1,15 +1,37 @@
 import { applyMiddleware, combineReducers, createStore } from 'redux';
+import axios from 'axios';
+import logger from 'redux-logger';
+import promise from 'redux-promise-middleware';
 
-const userReducer = (state = {}, action) => {
+const initialState = {
+    fetching: false,
+    fetched: false,
+    users: [],
+    error: null
+};
+
+const userReducer = (state = initialState, action) => {
     switch (action.type) {
-        case 'CHANGE_NAME':
-            state = { ...state, name: action.payload };
+        case 'FETCH_USERS_PENDING':
+            return {
+              ...state,
+              fetching: true
+            };
             break;
-        case 'CHANGE_AGE':
-            state = { ...state, age: action.payload };
+        case 'FETCH_USERS_REJECTED':
+            return {
+              ...state,
+              fetching: false,
+              error: action.payload
+            };
             break;
-        case 'ERROR':
-            throw new Error('ERROR!');
+        case 'FETCH_USERS_FULFILLED':
+            return {
+              ...state,
+              fetching: false,
+              fetched: true,
+              users: action.payload
+            };
             break;
         default:
             break;
@@ -17,38 +39,15 @@ const userReducer = (state = {}, action) => {
     return state;
 };
 
-const tweetsReducer = (state = [], action) => {
-    return state;
-};
-
 const reducers = combineReducers({
-    user: userReducer,
-    tweets: tweetsReducer
+    user: userReducer
 });
 
-const logger = (store) => (next) => (action) => {
-    console.log('action fired', action);
-    next(action);
-};
-
-const error = (store) => (next) => (action) => {
-    try {
-        next(action);
-    } catch (error) {
-        console.error(error);
-    }
-};
-
-
-const middleware = applyMiddleware(logger, error);
+const middleware = applyMiddleware(promise(), logger);
 
 const store = createStore(reducers, middleware);
 
-store.subscribe(() => {
-    console.log('store changed', store.getState());
+store.dispatch({
+    type: 'FETCH_USERS',
+    payload: axios.get('')
 });
-
-store.dispatch({type: 'CHANGE_NAME', payload: 'Craig'});
-store.dispatch({type: 'CHANGE_AGE', payload: 26});
-store.dispatch({type: 'CHANGE_AGE', payload: 27});
-store.dispatch({type: 'ERROR', payload: 'error'});
